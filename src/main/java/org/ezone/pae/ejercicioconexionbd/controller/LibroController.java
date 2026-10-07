@@ -48,6 +48,24 @@ public class LibroController {
         configurarTabla();
         configurarCombobox();
         cargarLibros();
+
+        // Cada vez que se selecciona una fila del TableView, obtenemos ese objeto
+        tblLibros.getSelectionModel().selectedItemProperty().addListener(
+                (observable, oldValue, newValue) -> {
+                    if (newValue != null) {
+                        cargarLibroSeleccionado(newValue);
+                    }
+                });
+
+    }
+
+    //Encargado de mapear los datos en los TextFields
+    private void cargarLibroSeleccionado(Libro libro) {
+        txtTitulo.setText(libro.getTitulo());
+        txtAutor.setText(libro.getAutor());
+        cmbCategoria.setValue(libro.getCategoria());
+        txtPrecio.setText(String.valueOf(libro.getPrecio()));
+        txtStock.setText(String.valueOf(libro.getStock()));
     }
 
     //Definir el tipo de dato que se escribe en cada celda del tableview
@@ -99,7 +117,6 @@ public class LibroController {
         if(!validarCampos()){
             return;
         }
-
         //Consulta SQL a ejecutar
         String sql = "INSERT INTO libro (titulo, autor, categoria, precio, stock) " +
             "VALUES (?, ?, ?, ?, ?)";
@@ -157,4 +174,108 @@ public class LibroController {
         txtStock.clear();
         cmbCategoria.getSelectionModel().clearSelection();
     }
+
+    @FXML
+    private void eliminarLibro() {
+        Libro libroSeleccionado = tblLibros.getSelectionModel().getSelectedItem();
+
+        if(libroSeleccionado == null) {
+            mostrarAlerta(
+                    Alert.AlertType.WARNING,
+                    "Selección requerida",
+                    "No hay libro seleccionado",
+                    "Seleccione un libro de la tabla"
+            );
+            return;
+        }
+
+        if(!validarCampos()) {
+            return;
+        }
+
+        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmacion.setTitle("Confirmación");
+        confirmacion.setHeaderText(null);
+        confirmacion.setContentText("¿Está seguro de que desea eliminar el registro de libro?");
+
+        if(confirmacion.showAndWait().isEmpty() || confirmacion.getResult() != ButtonType.OK) {
+            return;
+        }
+
+        // Eliminación física - borrar la fila de la tabla
+        String sql = "DELETE from libro WHERE id = ?";
+
+        try (
+            Connection connection = DatabaseConnection.getConnection();
+            PreparedStatement statement = connection.prepareStatement(sql);
+            ){
+            statement.setInt(1, libroSeleccionado.getId());
+
+            int filasEliminadas = statement.executeUpdate();
+            if(filasEliminadas > 0) {
+                mostrarAlerta(
+                        Alert.AlertType.INFORMATION,
+                        "Registro eliminado",
+                        "Eliminación completada",
+                        "El libro fue eliminado exitosamente"
+                );
+                limpiarCampos();
+                cargarLibros();
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+
+    public void actualizarLibro() {
+        Libro libroSeleccionado = tblLibros.getSelectionModel().getSelectedItem();
+
+        if(libroSeleccionado == null){
+            mostrarAlerta(
+                    Alert.AlertType.WARNING,
+                    "Selección rquerida",
+                    "No hay un libro seleccionado",
+                    "Seleccione un libro de la tabla"
+            );
+            return;
+        }
+
+        if(!validarCampos()) {
+            return;
+        }
+
+        String sql = "UPDATE libro SET titulo = ?, autor = ?, categoria = ?, precio = ?, stock = ? WHERE id = ?";
+
+        try(
+                Connection connection = DatabaseConnection.getConnection();
+                PreparedStatement statement = connection.prepareStatement(sql);
+                ){
+
+            statement.setString(1, txtTitulo.getText());
+            statement.setString(2, txtAutor.getText());
+            statement.setString(3, cmbCategoria.getValue());
+            statement.setDouble(4, Double.parseDouble(txtPrecio.getText()));
+            statement.setInt(5, Integer.parseInt(txtStock.getText()));
+            statement.setInt(6, libroSeleccionado.getId());
+
+            int filasActualizadas = statement.executeUpdate();
+
+            if(filasActualizadas > 0) {
+                mostrarAlerta(
+                        Alert.AlertType.INFORMATION,
+                        "Registro actualizado",
+                        "Actualización completada",
+                        "El libro fue actualizado exitosamente"
+                );
+                limpiarCampos();
+                cargarLibros();
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
 }
+

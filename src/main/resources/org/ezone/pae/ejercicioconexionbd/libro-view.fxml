@@ -16,14 +16,16 @@
         <Label layoutX="325.0" layoutY="60.0" text="Autor" />
         <TextField fx:id="txtAutor" layoutX="325.0" layoutY="77.0" prefWidth="230.0" promptText="Autor del libro" />
         <Label layoutX="45.0" layoutY="115.0" text="Categoría" />
-        <ComboBox fx:id="cmbCategoria" layoutX="45.0" layoutY="132.0" prefWidth="230.0" />
+        <ComboBox fx:id="cmbCategoria" layoutX="45.0" layoutY="132.0" prefWidth="230.0" promptText="Seleccione una categoría" />
         <Label layoutX="325.0" layoutY="115.0" text="Precio" />
         <TextField fx:id="txtPrecio" layoutX="325.0" layoutY="132.0" prefWidth="105.0" promptText="9.99" />
         <Label layoutX="450.0" layoutY="115.0" text="Stock" />
         <TextField fx:id="txtStock" layoutX="450.0" layoutY="132.0" prefWidth="105.0" promptText="50" />
-        <Button fx:id="btnGuardar" layoutX="169.0" layoutY="175.0" mnemonicParsing="false" onAction="#guardarLibro" prefWidth="80.0" style="-fx-background-color: #BFE3E0; -fx-background-radius: 4;" text="Guardar" />
-        <Button fx:id="btnLimpiar" layoutX="260.0" layoutY="175.0" mnemonicParsing="false" onAction="#limpiarCampos" prefWidth="80.0" style="-fx-background-color: #DDE3E8; -fx-background-radius: 4;" text="Limpiar" />
-        <Button fx:id="btnActualizar" layoutX="348.0" layoutY="175.0" mnemonicParsing="false" onAction="#cargarLibros" prefHeight="25.0" prefWidth="105.0" style="-fx-background-color: #B9D7F0; -fx-background-radius: 4;" text="Actualizar tabla" />
+        <Button fx:id="btnGuardar" layoutX="45.0" layoutY="175.0" mnemonicParsing="false" onAction="#guardarLibro" prefWidth="80.0" style="-fx-background-color: #BFE3E0; -fx-background-radius: 4;" text="Guardar" />
+        <Button fx:id="btnActualizarLibro" layoutX="132.0" layoutY="175.0" mnemonicParsing="false" onAction="#actualizarLibro" prefHeight="25.0" prefWidth="120.0" style="-fx-background-color: #A9CFEF; -fx-background-radius: 4;" text="Actualizar registro" />
+        <Button fx:id="btnEliminar" layoutX="259.0" layoutY="175.0" mnemonicParsing="false" onAction="#eliminarLibro" prefWidth="80.0" style="-fx-background-color: #F2B8B5; -fx-background-radius: 4;" text="Eliminar" />
+        <Button fx:id="btnLimpiar" layoutX="346.0" layoutY="175.0" mnemonicParsing="false" onAction="#limpiarCampos" prefWidth="80.0" style="-fx-background-color: #DDE3E8; -fx-background-radius: 4;" text="Limpiar" />
+        <Button fx:id="btnActualizar" layoutX="433.0" layoutY="175.0" mnemonicParsing="false" onAction="#cargarLibros" prefHeight="25.0" prefWidth="105.0" style="-fx-background-color: #B9D7F0; -fx-background-radius: 4;" text="Actualizar tabla" />
         <TableView fx:id="tblLibros" layoutX="20.0" layoutY="220.0" prefHeight="160.0" prefWidth="560.0">
             <columns>
                 <TableColumn fx:id="colId" prefWidth="40.0" text="ID" />
